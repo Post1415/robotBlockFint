@@ -75,7 +75,7 @@ Test Deposit
     END
 
 
-    #สร้าง list เก็บยอดฝากเงินของ 3 คนที่มีเงินดเดือนมากที่สุด
+    #สร้าง list เก็บยอดฝากเงินของ 3 คนที่มีเงินเดือนมากที่สุด
     ${deposit_list}    Create List
 
     FOR    ${id}    IN RANGE    3
