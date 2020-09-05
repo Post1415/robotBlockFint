@@ -42,47 +42,21 @@ Test Deposit
     ${employee}          Set Variable             ${employees_data['lists']}
     
 
-    #สร้าง dictionary ระหว่าง id กับ salary
-    ${id_salary}       Create Dictionary
-    ${len_employee}    Get Length               ${employee}
-
-    FOR    ${i}    IN RANGE    ${len_employee}
-        ${id}                Get From Dictionary       ${employee}[${i}]        id
-        ${salary}            Get From Dictionary       ${employee}[${i}]        salary
-        Set To Dictionary    ${id_salary}              ${id}                    ${salary}
-    END
+    #เรียงลำดับเงินเดือนจากมากไปน้อย จากนั้นนำ id และ Deposit ของ 3 คน ที่มีเงินเดือนมากที่สุดไปเก็บไว้ใน list
+    ${sort_salary}     Evaluate        sorted(${employee}, key=lambda item : item['salary'], reverse = True)
+    ${id_top_list}     Create List
+    ${deposit_top_list}    Create List
     
-
-    #เรียงลำดับเงินเดือนจากมากไปน้อย จากนั้นนำ id ของ 3 คน ที่มีเงินเดือนมากที่สุดไปเก็บไว้ใน list
-    ${sort_salary}    Evaluate        sorted(${id_salary}.items(), key=lambda item : item[1], reverse = True)
-    ${id_top_list}    Create List
-
     FOR    ${l}    IN RANGE    3
-        Append To List    ${id_top_list}    ${sort_salary}[${l}][0]
+        Append To List    ${id_top_list}    ${sort_salary}[${l}][id]
+        Append To List    ${deposit_top_list}   ${sort_salary}[${l}][Deposit]
     END
+
 
     #แสดง id ของคนที่มีเงินเดือนสูงที่สุด 3 คน
     Log To Console    id ของคนที่มีเงินเดือนสูงที่สุด 3 คน : ${id_top_list}
     
 
-    #สร้าง dictionary ระหว่าง id กับ Deposit
-    ${id_deposit}    Create Dictionary
-
-    FOR    ${a}    IN RANGE    ${len_employee}
-        ${id}                Get From Dictionary        ${employee}[${a}]          id
-        ${deposit}           Get From Dictionary        ${employee}[${a}]          Deposit
-        Set To Dictionary    ${id_deposit}              ${id}                      ${deposit}
-    END
-
-
-    #สร้าง list เก็บยอดฝากเงินของ 3 คนที่มีเงินเดือนมากที่สุด
-    ${deposit_list}    Create List
-
-    FOR    ${id}    IN RANGE    3
-        Append To List    ${deposit_list}    ${id_deposit}[${id_top_list}[${id}]]
-    END
-    
-    
     #ทำการฝากเงินในระบบ
     Open Browser    http://test.blockfint.com    ${browser}
     Wait Until Page Contains     เงินฝาก
@@ -93,7 +67,7 @@ Test Deposit
         Input Text                   name=id               ${id_top_list}[${id}]
         Click Button                 name=login-button
         Wait Until Page Contains     จำนวนเงิน
-        For Loop Deposit             ${deposit_list}       ${id}
+        For Loop Deposit             ${deposit_top_list}       ${id}
         Element Should Be Visible    xpath=//*[@id="w1"]/li/a
         Click Element                xpath=//*[@id="w1"]/li/a
     END
