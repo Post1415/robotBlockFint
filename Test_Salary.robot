@@ -58,16 +58,16 @@ Test Deposit
     
 
     #ทำการฝากเงินในระบบ
-    # Open Browser    http://test.blockfint.com    ${browser}
-    # Wait Until Page Contains     เงินฝาก
-    # Maximize Browser Window
-    # FOR    ${id}    IN RANGE    3
-    #     Element Should Be Visible    name=id
-    #     Element Should Be Visible    name=login-button
-    #     Input Text                   name=id               ${id_top_list}[${id}]
-    #     Click Button                 name=login-button
-    #     Wait Until Page Contains     จำนวนเงิน
-    #     For Loop Deposit             ${deposit_top_list}       ${id}
-    #     Element Should Be Visible    xpath=//*[@id="w1"]/li/a
-    #     Click Element                xpath=//*[@id="w1"]/li/a
-    # END
+    Open Browser    http://test.blockfint.com    ${browser}
+    Wait Until Page Contains     เงินฝาก
+    Maximize Browser Window
+    FOR    ${id}    IN RANGE    3
+        Element Should Be Visible    name=id
+        Element Should Be Visible    name=login-button
+        Input Text                   name=id               ${id_top_list}[${id}]
+        Click Button                 name=login-button
+        Wait Until Page Contains     จำนวนเงิน
+        For Loop Deposit             ${deposit_top_list}       ${id}
+        Element Should Be Visible    xpath=//*[@id="w1"]/li/a
+        Click Element                xpath=//*[@id="w1"]/li/a
+    END
