@@ -36,15 +36,15 @@ For Loop Deposit
 Test Deposit
     #นำค่าจาก url และทำการสร้างไฟล์
     GET                  ${salary_url}
-    Output               response body            employee.json
+    Output               $.lists            employee.json
     ${employee_json}     Get File                 employee.json 
     ${employees_data}    Evaluate                 json.loads('''${employee_json}''')    
-    ${employee}          Set Variable             ${employees_data['lists']}
+    ${employee}          Set Variable             ${employees_data}
     
 
     #เรียงลำดับเงินเดือนจากมากไปน้อย จากนั้นนำ id และ Deposit ของ 3 คน ที่มีเงินเดือนมากที่สุดไปเก็บไว้ใน list
-    ${sort_salary}     Evaluate        sorted(${employee}, key=lambda item : item['salary'], reverse = True)
-    ${id_top_list}     Create List
+    ${sort_salary}         Evaluate        sorted(${employee}, key=lambda item : item['salary'], reverse = True)
+    ${id_top_list}         Create List
     ${deposit_top_list}    Create List
     
     FOR    ${l}    IN RANGE    3
@@ -58,16 +58,16 @@ Test Deposit
     
 
     #ทำการฝากเงินในระบบ
-    Open Browser    http://test.blockfint.com    ${browser}
-    Wait Until Page Contains     เงินฝาก
-    Maximize Browser Window
-    FOR    ${id}    IN RANGE    3
-        Element Should Be Visible    name=id
-        Element Should Be Visible    name=login-button
-        Input Text                   name=id               ${id_top_list}[${id}]
-        Click Button                 name=login-button
-        Wait Until Page Contains     จำนวนเงิน
-        For Loop Deposit             ${deposit_top_list}       ${id}
-        Element Should Be Visible    xpath=//*[@id="w1"]/li/a
-        Click Element                xpath=//*[@id="w1"]/li/a
-    END
+    # Open Browser    http://test.blockfint.com    ${browser}
+    # Wait Until Page Contains     เงินฝาก
+    # Maximize Browser Window
+    # FOR    ${id}    IN RANGE    3
+    #     Element Should Be Visible    name=id
+    #     Element Should Be Visible    name=login-button
+    #     Input Text                   name=id               ${id_top_list}[${id}]
+    #     Click Button                 name=login-button
+    #     Wait Until Page Contains     จำนวนเงิน
+    #     For Loop Deposit             ${deposit_top_list}       ${id}
+    #     Element Should Be Visible    xpath=//*[@id="w1"]/li/a
+    #     Click Element                xpath=//*[@id="w1"]/li/a
+    # END
